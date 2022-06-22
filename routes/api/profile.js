@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-// const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
@@ -27,5 +27,61 @@ router.get('/me', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+// @route   POST api/profile/
+// @desc    Create or update user profile
+// @access  Private
+router.post(
+    '/',
+    [
+        auth,
+        [
+            check('title', 'Please title your profile.').not().isEmpty(),
+            check('calories', 'Please enter your daily calories')
+                .not()
+                .isEmpty(),
+        ],
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { title, calories, height, weight, goalWeight, macros } =
+            req.body;
+
+        const profileFields = {};
+        profileFields.user = req.user.id;
+        profileFields.title = title;
+        profileFields.calories = calories;
+        if (height) profileFields.height = height;
+        if (weight) profileFields.weight = weight;
+        if (goalWeight) profileFields.goalWeight = goalWeight;
+        if (macros) profileFields.macros = macros;
+
+        try {
+            let profile = await Profile.findOne({ user: req.user.id });
+
+            if (profile) {
+                //Update
+                profile = await Profile.findOneAndUpdate(
+                    { user: req.user.id },
+                    { $set: profileFields },
+                    { new: true }
+                );
+                return res.json(profile);
+            }
+
+            // Create
+            profile = new Profile(profileFields);
+
+            await profile.save();
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).send('Server Error.');
+        }
+    }
+);
 
 module.exports = router;
