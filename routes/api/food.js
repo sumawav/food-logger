@@ -76,9 +76,9 @@ router.post(
 // @route   DELETE api/food
 // @desc    Delete a food
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:food_id', auth, async (req, res) => {
     try {
-        await Food.findOneAndRemove({ _id: req.params.user_id });
+        await Food.findOneAndRemove({ _id: req.params.food_id });
         res.json({ msg: 'Food deleted' });
     } catch (err) {
         console.log(err.message);
