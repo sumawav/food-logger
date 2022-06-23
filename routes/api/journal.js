@@ -56,4 +56,42 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
+// @route   POST api/journal/:journal_id
+// @desc    Add food to journal
+// @access  Private
+router.post(
+    '/:journal_id',
+    [
+        auth,
+        [
+            check('mealNumber', 'Please select a meal number').not().isEmpty(),
+            check('servings', 'Please enter the servings').not().isEmpty(),
+            check('food', 'Please enter a food id').not().isEmpty(),
+        ],
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { mealNumber, servings, food } = req.body;
+
+        try {
+            let journal = await Journal.findOne({ _id: req.params.journal_id });
+            if (!journal) {
+                return res.status(400).json({
+                    errors: [{ msg: 'Journal not found' }],
+                });
+            }
+            journal.foods.unshift({ mealNumber, servings, food });
+            await journal.save();
+            res.json(journal);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send('Server Error');
+        }
+    }
+);
+
 module.exports = router;

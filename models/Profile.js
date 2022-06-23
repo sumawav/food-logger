@@ -16,27 +16,15 @@ const ProfileSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
+        default: () => Date.now(),
     },
-    height: {
-        type: Number,
-    },
-    weight: {
-        type: Number,
-    },
-    goalWeight: {
-        type: Number,
-    },
+    height: Number,
+    weight: Number,
+    goalWeight: Number,
     macros: {
-        protein: {
-            type: Number,
-        },
-        fat: {
-            type: Number,
-        },
-        carbohydrate: {
-            type: Number,
-        },
+        protein: Number,
+        fat: Number,
+        carbohydrate: Number,
     },
 });
 

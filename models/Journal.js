@@ -17,24 +17,14 @@ const JournalSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    log: [
+    foods: [
         {
-            mealNumber: {
-                type: Number,
-                required: true,
+            food: {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: 'food',
             },
-            meal: [
-                {
-                    food: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: 'food',
-                    },
-                    servings: {
-                        type: Number,
-                        required: true,
-                    },
-                },
-            ],
+            servings: Number,
+            mealNumber: Number,
         },
     ],
 });
