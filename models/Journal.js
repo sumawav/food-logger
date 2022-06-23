@@ -5,24 +5,36 @@ const JournalSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'user',
     },
-    date: {
-        type: Date,
-        default: Date.now,
+    year: {
+        type: Number,
+        required: true,
     },
-    foods: [
+    month: {
+        type: Number,
+        required: true,
+    },
+    day: {
+        type: Number,
+        required: true,
+    },
+    log: [
         {
-            food: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'food',
-            },
-            servings: {
-                type: Number,
-                required: true,
-            },
             mealNumber: {
                 type: Number,
                 required: true,
             },
+            meal: [
+                {
+                    food: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'food',
+                    },
+                    servings: {
+                        type: Number,
+                        required: true,
+                    },
+                },
+            ],
         },
     ],
 });
