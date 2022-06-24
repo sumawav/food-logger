@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
-const { searchFoods, getFood } = require('../../config/fdc');
+const { searchFDC, getFDC } = require('../../config/fdc');
 
 const Food = require('../../models/Food');
 // @route   GET api/food
@@ -92,7 +92,7 @@ router.delete('/:food_id', auth, async (req, res) => {
 // @access  Private
 router.post('/fdc', auth, async (req, res) => {
     try {
-        const foods = await searchFoods(req.body.query);
+        const foods = await searchFDC(req.body.query);
         res.send(foods);
     } catch (err) {
         console.log(err.message);
@@ -105,7 +105,7 @@ router.post('/fdc', auth, async (req, res) => {
 // @access  Private
 router.get('/fdc/:fdc_id', auth, async (req, res) => {
     try {
-        const food = await getFood(req.params.fdc_id);
+        const food = await getFDC(req.params.fdc_id);
         res.send(food);
     } catch (err) {
         console.log(err.message);

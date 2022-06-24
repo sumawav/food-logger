@@ -2,7 +2,7 @@ const axios = require('axios');
 const config = require('config');
 const FDC_API_KEY = config.get('FDC_API_key');
 
-const searchFoods = async (query, pageNumber = 1, pageSize = 10) => {
+const searchFDC = async (query, pageNumber = 1, pageSize = 10) => {
     try {
         const response = await axios.post(
             'https://api.nal.usda.gov/fdc/v1/foods/search',
@@ -27,7 +27,7 @@ const searchFoods = async (query, pageNumber = 1, pageSize = 10) => {
     }
 };
 
-const getFood = async (fdcId) => {
+const getFDC = async (fdcId) => {
     try {
         const response = await axios.get(
             `https://api.nal.usda.gov/fdc/v1/food/${fdcId}?format=abridged`,
@@ -57,17 +57,6 @@ const simplify = (foods) => {
             const fiber = e.foodNutrients.find((e) => e.nutrientId === 1079);
             const sugar = e.foodNutrients.find((e) => e.nutrientId === 1063);
             const sodium = e.foodNutrients.find((e) => e.nutrientId === 1093);
-            // if (
-            //     !calories ||
-            //     !protein ||
-            //     !fat ||
-            //     !carbohydrate ||
-            //     !fiber ||
-            //     !sugar ||
-            //     !sodium
-            // ) {
-            //     return null;
-            // }
             return {
                 fdcId: e.fdcId,
                 name: e.description,
@@ -83,5 +72,5 @@ const simplify = (foods) => {
         .filter((e) => e !== null);
 };
 
-exports.searchFoods = searchFoods;
-exports.getFood = getFood;
+exports.searchFDC = searchFDC;
+exports.getFDC = getFDC;
