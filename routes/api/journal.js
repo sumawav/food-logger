@@ -84,7 +84,7 @@ router.post(
                     errors: [{ msg: 'Journal not found' }],
                 });
             }
-            journal.foods.unshift({ mealNumber, servings, food });
+            journal.foods.push({ mealNumber, servings, food });
             await journal.save();
             res.json(journal);
         } catch (err) {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
+const searchFoods = require('../../config/fdc');
 
 const Food = require('../../models/Food');
 // @route   GET api/food
@@ -85,4 +86,18 @@ router.delete('/:food_id', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+// @route   POST api/food/fdc
+// @desc    Search FDC food database
+// @access  Private
+router.post('/fdc', auth, async (req, res) => {
+    try {
+        const foods = await searchFoods(req.body.query);
+        res.send(foods);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;
