@@ -34,14 +34,13 @@ router.post('/', auth, async (req, res) => {
         journalFields.day = day;
     }
     try {
-        let journal = await Journal.where('user')
-            .equals(journalFields.user)
-            .where('year')
-            .equals(journalFields.year)
-            .where('month')
-            .equals(journalFields.month)
-            .where('day')
-            .equals(journalFields.day);
+        let journal = await Journal.find()
+            .byUser(journalFields.user)
+            .byExactDay(
+                journalFields.year,
+                journalFields.month,
+                journalFields.day
+            );
 
         if (journal[0]) {
             return res.json(journal[0]);
@@ -78,13 +77,13 @@ router.post(
         const { mealNumber, servings, food } = req.body;
 
         try {
-            let journal = await Journal.findOne({ _id: req.params.id });
+            let journal = await Journal.findOne().byJournalId(req.params.id);
             if (!journal) {
                 return res.status(400).json({
                     errors: [{ msg: 'Journal not found' }],
                 });
             }
-            journal.entries.push({ mealNumber, servings, food });
+            journal.addEntry(mealNumber, servings, food);
             await journal.save();
             res.json(journal);
         } catch (err) {

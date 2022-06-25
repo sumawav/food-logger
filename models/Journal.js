@@ -35,4 +35,25 @@ const JournalSchema = mongoose.Schema({
     ],
 });
 
+JournalSchema.methods.addEntry = function (mealNumber, servings, food) {
+    this.entries.push({ mealNumber, servings, food });
+};
+
+JournalSchema.query.byExactDay = function (year, month, day) {
+    return this.where('year')
+        .equals(year)
+        .where('month')
+        .equals(month)
+        .where('day')
+        .equals(day);
+};
+
+JournalSchema.query.byUser = function (user) {
+    return this.where('user').equals(user);
+};
+
+JournalSchema.query.byJournalId = function (id) {
+    return this.where('_id').equals(id);
+};
+
 module.exports = Journal = mongoose.model('journal', JournalSchema);
