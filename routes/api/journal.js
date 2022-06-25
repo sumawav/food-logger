@@ -34,7 +34,7 @@ router.post('/', auth, async (req, res) => {
         journalFields.day = day;
     }
     try {
-        let journal = await Journal.find()
+        let journal = await Journal.findOne()
             .byUser(journalFields.user)
             .byExactDay(
                 journalFields.year,
@@ -42,8 +42,8 @@ router.post('/', auth, async (req, res) => {
                 journalFields.day
             );
 
-        if (journal[0]) {
-            return res.json(journal[0]);
+        if (journal) {
+            return res.json(journal);
         }
 
         journal = new Journal(journalFields);
@@ -98,17 +98,14 @@ router.post(
 // @access  Private
 router.delete('/:journal_id/:entry_id', auth, async (req, res) => {
     try {
-        const journal = await Journal.findOne({ _id: req.params.journal_id });
-        const entry = journal.entries.find(
-            (entry) => entry.id === req.params.entry_id
+        const journal = await Journal.findOne().byJournalId(
+            req.params.journal_id
         );
+        const entry = journal.getEntryById(req.params.entry_id);
         if (!entry) {
             return res.status(404).json({ msg: 'Not found' });
         }
-        const removeIndex = journal.entries
-            .map((entry) => entry._id)
-            .indexOf(req.params.entry_id);
-        journal.entries.splice(removeIndex, 1);
+        journal.removeEntryById(req.params.entry_id);
         await journal.save();
         res.json(journal);
     } catch (err) {

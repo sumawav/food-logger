@@ -39,6 +39,16 @@ JournalSchema.methods.addEntry = function (mealNumber, servings, food) {
     this.entries.push({ mealNumber, servings, food });
 };
 
+JournalSchema.methods.removeEntryById = function (id) {
+    const removeIndex = this.entries.map((entry) => entry._id).indexOf(id);
+    this.entries.splice(removeIndex, 1);
+};
+
+JournalSchema.methods.getEntryById = function (id) {
+    const entry = this.entries.find((entry) => entry.id === id);
+    return entry;
+};
+
 JournalSchema.query.byExactDay = function (year, month, day) {
     return this.where('year')
         .equals(year)
