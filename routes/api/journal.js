@@ -56,11 +56,11 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-// @route   POST api/journal/:journal_id
-// @desc    Add food to journal
+// @route   POST api/journal/:id
+// @desc    Add food to journal by id
 // @access  Private
 router.post(
-    '/:journal_id',
+    '/:id',
     [
         auth,
         [
@@ -78,13 +78,13 @@ router.post(
         const { mealNumber, servings, food } = req.body;
 
         try {
-            let journal = await Journal.findOne({ _id: req.params.journal_id });
+            let journal = await Journal.findOne({ _id: req.params.id });
             if (!journal) {
                 return res.status(400).json({
                     errors: [{ msg: 'Journal not found' }],
                 });
             }
-            journal.foods.push({ mealNumber, servings, food });
+            journal.entries.push({ mealNumber, servings, food });
             await journal.save();
             res.json(journal);
         } catch (err) {
@@ -94,4 +94,27 @@ router.post(
     }
 );
 
+// @route   DELETE api/journal/:id/:entry_id
+// @desc    Delete food in journal by :entry_id
+// @access  Private
+router.delete('/:id/:entry_id', auth, async (req, res) => {
+    try {
+        const journal = await Journal.findOne({ _id: req.params.id });
+        const entry = journal.entries.find(
+            (entry) => entry.id === req.params.entry_id
+        );
+        if (!entry) {
+            return res.status(404).json({ msg: 'Not found' });
+        }
+        const removeIndex = journal.entries
+            .map((entry) => entry._id)
+            .indexOf(req.params.entry_id);
+        journal.entries.splice(removeIndex, 1);
+        await journal.save();
+        res.json(journal);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
 module.exports = router;
