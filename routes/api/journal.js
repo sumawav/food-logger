@@ -94,12 +94,12 @@ router.post(
     }
 );
 
-// @route   DELETE api/journal/:id/:entry_id
+// @route   DELETE api/journal/:journal_id/:entry_id
 // @desc    Delete food in journal by :entry_id
 // @access  Private
-router.delete('/:id/:entry_id', auth, async (req, res) => {
+router.delete('/:journal_id/:entry_id', auth, async (req, res) => {
     try {
-        const journal = await Journal.findOne({ _id: req.params.id });
+        const journal = await Journal.findOne({ _id: req.params.journal_id });
         const entry = journal.entries.find(
             (entry) => entry.id === req.params.entry_id
         );
