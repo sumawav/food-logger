@@ -16,12 +16,21 @@ router.get('/', auth, (req, res) => {
     }
 });
 
-// @route   GET api/journal
+// @route   GET api/journal/:journal_id
 // @desc    Get journal by id
 // @access  Private
-router.get('/:journal_id', auth, (req, res) => {
+router.get('/:journal_id', auth, async (req, res) => {
     try {
-        res.send('Journal route');
+        let journal = await Journal.findOne().byJournalId(
+            req.params.journal_id
+        );
+
+        if (!journal) {
+            return res.status(400).json({
+                errors: [{ msg: 'Journal not found' }],
+            });
+        }
+        res.json(journal);
     } catch (err) {
         console.log(err.message);
         res.status(500).send('Server Error');
@@ -35,6 +44,32 @@ router.get('/:journal_id/meal', auth, async (req, res) => {
     try {
         let journal = await Journal.findOne().byJournalId(
             req.params.journal_id
+        );
+
+        if (!journal) {
+            return res.status(400).json({
+                errors: [{ msg: 'Journal not found' }],
+            });
+        }
+        const meals = await journal.getEntriesByMeal();
+
+        res.json(meals);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/journal/meal
+// @desc    Get today's food log organized by meal
+// @access  Private
+router.get('/meal', auth, async (req, res) => {
+    try {
+        let date = new Date();
+        let journal = await Journal.findOne().byExactDay(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
         );
 
         if (!journal) {
