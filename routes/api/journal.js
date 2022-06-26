@@ -5,11 +5,47 @@ const { check, validationResult } = require('express-validator');
 
 const Journal = require('../../models/Journal');
 // @route   GET api/journal
-// @desc    Get seven latest entries
+// @desc    Get today's journal
 // @access  Private
-router.get('/', auth, (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
-        res.send('Journal route');
+        let date = new Date();
+        let journal = await Journal.findOne().byExactDay(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
+        );
+
+        if (!journal) {
+            return res.status(400).json({
+                errors: [{ msg: 'Journal not found' }],
+            });
+        }
+        res.json(journal);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/journal/meal
+// @desc    Get today's food log organized by meal
+// @access  Private
+router.get('/meal', auth, async (req, res) => {
+    try {
+        let date = new Date();
+        let journal = await Journal.findOne().byExactDay(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
+        );
+
+        if (!journal) {
+            return res.status(400).json({
+                errors: [{ msg: 'Journal not found' }],
+            });
+        }
+        res.json(journal.getEntriesByMeal());
     } catch (err) {
         console.log(err.message);
         res.status(500).send('Server Error');
@@ -44,32 +80,6 @@ router.get('/:journal_id/meal', auth, async (req, res) => {
     try {
         let journal = await Journal.findOne().byJournalId(
             req.params.journal_id
-        );
-
-        if (!journal) {
-            return res.status(400).json({
-                errors: [{ msg: 'Journal not found' }],
-            });
-        }
-        const meals = await journal.getEntriesByMeal();
-
-        res.json(meals);
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).send('Server Error');
-    }
-});
-
-// @route   GET api/journal/meal
-// @desc    Get today's food log organized by meal
-// @access  Private
-router.get('/meal', auth, async (req, res) => {
-    try {
-        let date = new Date();
-        let journal = await Journal.findOne().byExactDay(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate()
         );
 
         if (!journal) {
