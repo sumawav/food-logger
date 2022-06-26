@@ -49,6 +49,25 @@ JournalSchema.methods.getEntryById = function (id) {
     return entry;
 };
 
+JournalSchema.methods.getEntriesByMeal = function () {
+    const uniqueMealNumbers = this.entries
+        .map((e) => e.mealNumber)
+        .filter(
+            (mealNumber, index, mealNumberArray) =>
+                mealNumberArray.indexOf(mealNumber) === index
+        );
+
+    const byMeal = {};
+
+    uniqueMealNumbers.map((mealNumber) => {
+        byMeal[mealNumber] = this.entries.filter(
+            (e) => e.mealNumber === mealNumber
+        );
+    });
+
+    return byMeal;
+};
+
 JournalSchema.query.byExactDay = function (year, month, day) {
     return this.where('year')
         .equals(year)

@@ -16,6 +16,41 @@ router.get('/', auth, (req, res) => {
     }
 });
 
+// @route   GET api/journal
+// @desc    Get journal by id
+// @access  Private
+router.get('/:journal_id', auth, (req, res) => {
+    try {
+        res.send('Journal route');
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/journal/:journal_id/meal
+// @desc    Get food log organized by meal
+// @access  Private
+router.get('/:journal_id/meal', auth, async (req, res) => {
+    try {
+        let journal = await Journal.findOne().byJournalId(
+            req.params.journal_id
+        );
+
+        if (!journal) {
+            return res.status(400).json({
+                errors: [{ msg: 'Journal not found' }],
+            });
+        }
+        const meals = await journal.getEntriesByMeal();
+
+        res.json(meals);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   POST api/journal
 // @desc    Creates a journal entry
 // @access  Private
