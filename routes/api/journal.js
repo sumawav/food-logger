@@ -78,16 +78,16 @@ router.get('/:journal_id', auth, async (req, res) => {
 // @access  Private
 router.get('/:journal_id/meal', auth, async (req, res) => {
     try {
-        let journal = await Journal.findOne().byJournalId(
-            req.params.journal_id
-        );
+        let journal = await Journal.findOne()
+            .byJournalId(req.params.journal_id)
+            .populate('entries.food');
 
         if (!journal) {
             return res.status(400).json({
                 errors: [{ msg: 'Journal not found' }],
             });
         }
-        const meals = await journal.getEntriesByMeal();
+        const meals = journal.getEntriesByMeal();
 
         res.json(meals);
     } catch (err) {
