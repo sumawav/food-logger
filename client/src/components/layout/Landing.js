@@ -1,21 +1,18 @@
 import React from 'react';
-import { Heading, Box } from 'rebass';
+import Box from '@mui/material/Box';
 
 export const Landing = () => (
     <Box
         sx={{
-            px: 4,
-            py: 6,
-            backgroundImage:
-                'url(https://source.unsplash.com/random/1024x768?sky)',
-            backgroundSize: 'cover',
-            borderRadius: 8,
-            color: 'white',
-            bg: 'gray',
+            width: 300,
+            height: 300,
+            backgroundColor: 'primary.dark',
+            '&:hover': {
+                backgroundColor: 'primary.main',
+                opacity: [0.9, 0.8, 0.7],
+            },
         }}
     >
-        <Heading textAlign="center" fontSize={[5, 6]}>
-            Landing
-        </Heading>
+        <h2>Landing</h2>
     </Box>
 );

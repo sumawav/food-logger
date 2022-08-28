@@ -1,11 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom/client';
+import { StyledEngineProvider } from '@mui/material/styles';
+import Navbar from './components/layout/Navbar';
 
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.createRoot(document.querySelector('#root')).render(
     <React.StrictMode>
-        <App />
+        <StyledEngineProvider injectFirst>
+            <Navbar />
+        </StyledEngineProvider>
     </React.StrictMode>
 );
