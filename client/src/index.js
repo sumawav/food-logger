@@ -1,14 +1,5 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
-import { StyledEngineProvider } from '@mui/material/styles';
-import Navbar from './components/layout/Navbar';
-import Dashboard from './components/layout/Dashboard';
+import App from './App';
 
-ReactDOM.createRoot(document.querySelector('#root')).render(
-    <React.StrictMode>
-        <StyledEngineProvider injectFirst>
-            <Navbar />
-            <Dashboard />
-        </StyledEngineProvider>
-    </React.StrictMode>
-);
+ReactDOM.createRoot(document.querySelector('#root')).render(<App />);
