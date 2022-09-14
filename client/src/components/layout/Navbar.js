@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -99,7 +100,11 @@ const Navbar = () => {
                                     key={page}
                                     onClick={handleCloseNavMenu}
                                 >
-                                    <Typography textAlign="center">
+                                    <Typography
+                                        textAlign="center"
+                                        component="a"
+                                        href="/log"
+                                    >
                                         {page}
                                     </Typography>
                                 </MenuItem>
@@ -125,7 +130,7 @@ const Navbar = () => {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        FLOG
                     </Typography>
                     <Box
                         sx={{
@@ -137,6 +142,7 @@ const Navbar = () => {
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
+                                href="/log"
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 {page}
