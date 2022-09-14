@@ -36,41 +36,21 @@ const FoodLog = () => (
             <Typography variant="caption" component="div" color="text.primary">
                 Remaining = Goal - Food + Exercise
             </Typography>
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <Item>
-                        <CircularProgressWithLabel size={300} value={75} />
-                    </Item>
-                </Grid>
-                <Grid item xs={6}>
-                    <Item>
-                        <Typography
-                            variant="h3"
-                            component="div"
-                            color="text.primary"
-                        >
-                            Protein
-                        </Typography>
-                        <LinearProgressWithLabel value={20} />
-                        <Typography
-                            variant="h3"
-                            component="div"
-                            color="text.primary"
-                        >
-                            Carbohydrates
-                        </Typography>
-                        <LinearProgressWithLabel value={70} />
-                        <Typography
-                            variant="h3"
-                            component="div"
-                            color="text.primary"
-                        >
-                            Fats
-                        </Typography>
-                        <LinearProgressWithLabel value={55} />
-                    </Item>
-                </Grid>
-            </Grid>
+
+            <Item>
+                <Typography variant="h3" component="div" color="text.primary">
+                    Protein
+                </Typography>
+                <LinearProgressWithLabel value={20} />
+                <Typography variant="h3" component="div" color="text.primary">
+                    Carbohydrates
+                </Typography>
+                <LinearProgressWithLabel value={70} />
+                <Typography variant="h3" component="div" color="text.primary">
+                    Fats
+                </Typography>
+                <LinearProgressWithLabel value={55} />
+            </Item>
         </Box>
     </Container>
 );
